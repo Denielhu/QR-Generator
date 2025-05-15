@@ -1,166 +1,271 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Sentro de Museo - Pre-Registration</title>
-  <link href="https://fonts.googleapis.com/css2?family=Georgia&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="index.css">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-</head>
-<body>
-  <div class="main-container">
-    <div class="left-panel">
-      <div>
-        <img class="logo" src="logos/expo.png" alt="Expo Logo" />
-        <div class="lable">STI SENIOR HIGH SCHOOL</div>
-        <h1 class="big">
-          <div class="expo">EXPO           
-            <img class="star" src="logos/star.png" alt="Star" />
-          </div>
-          <div class="year">2025</div>
-        </h1>
-        <div class="sub">
-          <p>presents:</p>
-          <h6 class="sdm">SENTRO DE MUSEO</h6>
-          <div class="tag">THE ARTISAN GALLERY</div>
-        </div>
-      </div>
-    </div>
+@import url('https://fonts.googleapis.com/css2?family=Playfair:ital,opsz,wght@0,5..1200,300..900&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bowlby+One+SC&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cal+Sans&display=swap');
 
-    <div class="right-panel">
-      <div class="form-wrapper">
-        <div id="form-content">
-          <h2>REGISTER</h2>
-          <form id="regForm">
-            <input type="text" name="name" placeholder="Full Name" required style="text-transform: uppercase;" />
-            <input type="text" name="studentId" placeholder="Student ID" required style="text-transform: uppercase;" />
-            <input type="text" name="section" placeholder="Section" required style="text-transform: uppercase;" />
-            <select name="role">
-              <option value="" disabled selected>Role (optional)</option>
-              <option value="Grade 11 Student">Grade 11 Student</option>
-              <option value="Tertiary Student">Tertiary Student</option>
-              <option value="Guest">Guest</option>
-              <option value="Bidder">Bidder</option>
-            </select>
-            <input type="text" name="companion" placeholder="Companion (Optional)" style="text-transform: uppercase;" />
-          
-            <div class="agreement">
-              <label for="agree">
-                <input type="checkbox" id="agree" required />
-                <span class="check-text">I agree to the use of my data for event registration purposes.</span>
-              </label>
-            </div>
-          
-            <button type="submit">Generate QR Code</button>
-          </form>
-        </div>
 
-        <div id="qrcode-section" style="display: none;">
-          <h2>REGISTER</h2>
-          <div class="info" id="info"></div>
-          <div id="qrcode" style="width: 200px; height: 200px; margin-bottom: 20px;"></div>
-          <div class="button-group">
-            <button class="icon-button" onclick="downloadQR()" title="Download QR Code">Download QR</button>
-            <button class="back-button" onclick="resetForm()">Register Another</button>
-          </div>          
-        </div>
-      </div>
-    </div>
-  </div>
+    * {
+      box-sizing: border-box;
+    }
 
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const form = document.getElementById("regForm");
-      const infoBox = document.getElementById("info");
-      const qrBox = document.getElementById("qrcode");
+    body {
+      margin: 0;
+      background-color: #F4B619;
+    }
 
-      const nameInput = form.querySelector('input[name="name"]');
-      nameInput.addEventListener("input", () => {
-        nameInput.value = nameInput.value.toUpperCase();
-      });
+    .main-container {
+      display: flex;
+      width: 95vw;
+      height: 90vh;
+      margin: 5vh auto;
+      background-color: #002154;
+      border-radius: 40px;
+      overflow: hidden;
+      padding: 40px;
+      gap: 20px;
+    }
 
-      form.addEventListener("submit", function (e) {
-        e.preventDefault();
+    p {
+      font-size: 18px;
+      font-family: 'Roboto Mono', monospace;
+      letter-spacing: -1px;
+      margin-bottom: -35px;
+    }
 
-        const name = form.name.value.trim();
-        const studentId = form.studentId.value.trim();
-        const section = form.section.value.trim();
-        const role = form.role.value.trim() || "N/A";  // role optional now
-        const companion = form.companion.value.trim() || "N/A";
+    .sdm {
+      font-size: 30px;
+      letter-spacing: 5px;
+      color: #002154;
+      -webkit-text-stroke: 0.1px #f5b000;
+    }
 
-        const qrData = `Name: ${name}\nStudent ID: ${studentId}\nSection: ${section}\nRole: ${role}\nCompanion: ${companion}`;
+    .tag {
+      font-size: 20px;
+      font-family: 'Cal Sans', sans-serif;
+      margin-top: -30px;
+      margin-bottom: -10px;
+      letter-spacing: 1px;
+    }
 
-        infoBox.innerHTML = `
-          <strong>Name:</strong> ${name}<br>
-          <strong>Student ID:</strong> ${studentId}<br>
-          <strong>Section:</strong> ${section}<br>
-          <strong>Role:</strong> ${role}<br>
-          <strong>Companion:</strong> ${companion}
-        `;
+    .left-panel {
+      flex: 1;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      font-family: 'Bowlby One Sc', sans-serif;
+      padding-left: 30px;
+    }
 
-        qrBox.innerHTML = ""; // Clear previous QR
+    .left-panel h1 {
+      font-size: 50px;
+      margin: 0;
+      color: #fff;
+    }
 
-        new QRCode(qrBox, {
-          text: qrData,
-          width: 200,
-          height: 200,
-        });
+    .left-panel .big {
+      font-family: 'Bowlby One Sc', sans-serif;
+      font-size: 160px;
+      color: #f5b000;
+      position: relative;
+      letter-spacing: 20px;
+      line-height: 100%;
+    }
 
-        // Show QR code section immediately
-        document.getElementById("form-content").style.display = "none";
-        document.getElementById("qrcode-section").style.display = "block";
-      });
+    .left-panel .expo {
+      color: #001f4d;
+      -webkit-text-stroke: 0.1px #f5b000;
+      letter-spacing: 5px;
+    }
 
-      window.resetForm = function () {
-        form.reset();
-        document.getElementById("form-content").style.display = "block";
-        document.getElementById("qrcode-section").style.display = "none";
-        qrBox.innerHTML = "";
-      };
+    .left-panel .year {
+      color: white;
+      letter-spacing: 5px;
+    }
 
-      window.downloadQR = function () {
-        const canvas = document.querySelector("#qrcode canvas");
-        if (!canvas) return alert("QR not found!");
+    .left-panel .sub {
+      font-size: 14px;
+      line-height: 0.11vh;
+      font-family: 'Bowlby One Sc', sans-serif;
+    }
 
-        const name = form.name.value.trim();
-        const studentId = form.studentId.value.trim();
-        const section = form.section.value.trim();
-        const role = form.role.value.trim() || "N/A";
-        const companion = form.companion.value.trim() || "N/A";
+    .sub .p {
+      font-family: 'Cal Sans';
+    }
 
-        const caption = `Name: ${name}\nStudent ID: ${studentId}\nSection: ${section}\nRole: ${role}\nCompanion: ${companion}`;
+    .left-panel .lable {
+      font-size: 20px;
+      letter-spacing: 1px;
+      margin-top: -50px;
+      font-family: 'Cal sans';
+      margin-top: -45px;
+    }
 
-        const qrSize = canvas.width;
-        const captionLines = caption.split("\n");
-        const lineHeight = 20;
-        const padding = 20;
+    .logo {
+      height: 40px;
+      margin-bottom: 50px;
+      margin-left: -10px;
+    }
 
-        const outputCanvas = document.createElement("canvas");
-        outputCanvas.width = qrSize + padding * 2;
-        outputCanvas.height = qrSize + captionLines.length * lineHeight + padding * 3;
+    .right-panel {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: 'Bowlby One Sc', sans-serif;
+    }
 
-        const ctx = outputCanvas.getContext("2d");
+    .form-wrapper {
+      background-color: white;
+      padding: 40px;
+      border-radius: 30px;
+      width: 1000px;
+      max-width: 480px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.1);
+      height: 100%;
+      max-height: 600px;
+      margin-right: 0;
+      margin-left: 200px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
 
-        ctx.fillStyle = "#fff";
-        ctx.fillRect(0, 0, outputCanvas.width, outputCanvas.height);
+    h2 {
+      text-align: left;
+      color: #002154;
+      margin-bottom: 25px;
+      font-size: 24px;
+      letter-spacing: 2px;
+      font-family: 'Montserrat', sans-serif;
+    }
 
-        ctx.drawImage(canvas, padding, padding);
+    form {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 120px;
+    }
 
-        ctx.fillStyle = "#000";
-        ctx.font = "14px Arial";
-        captionLines.forEach((line, i) => {
-          ctx.fillText(line, padding, qrSize + padding * 2 + i * lineHeight);
-        });
+    input, select {
+      padding: 12px;
+      margin-bottom: 15px;
+      border: none;
+      border-radius: 8px;
+      background-color: #e8dcdc;
+      font-family: Arial, sans-serif; /* Changed to Arial */
+      font-style: italic;
+    }
+    
 
-        const finalImage = outputCanvas.toDataURL("image/png");
-        const link = document.createElement("a");
-        link.href = finalImage;
-        const safeName = name.replace(/[^a-z0-9]/gi, "_").toLowerCase();
-        link.download = `qr_${safeName}.png`;
-        link.click();
-      };
-    });
-  </script>
-</body>
-</html>
+    button {
+      background-color: #002154;
+      color: #F4B619;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      font-family: 'Cal Sans', serif;
+      font-size: 14px;
+    }
+
+    button:hover {
+      background-color: #00163a;
+    }
+
+    .info {
+      background: #ddd7d7;
+      color: #596c79;
+      padding: 20px;
+      border-radius: 10px;
+      border: 1.5px solid #b87333;
+      text-align: justify;
+      font-family: 'Georgia', serif;
+      margin-bottom: 30px;
+    }
+
+    #qrcode {
+      display: flex;
+      justify-content: center;
+      align-items: center;  /* vertically center if needed */
+      height: 220px;        /* make sure container has height */
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      margin-left: 100px;
+    }
+
+    .back-button {
+      margin-top: 20px;
+      width: 100%;
+      background-color: #002154;
+      color: #F4B619;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      font-family: 'Georgia', serif;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .back-button:hover {
+      background-color: #00163a;
+    }
+    strong {
+      color: #002154;
+    }
+    .icon-button {
+      background-color: #002154;
+      border: none;
+      padding: 5px;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 20px;
+    }
+    
+    .icon-button img {
+      width: 24px;
+      height: 24px;
+    }
+    .button-group {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      margin-top: 20px;
+      flex-wrap: wrap;
+    }
+    .button-group .icon-button,
+    .button-group .back-button {
+      flex: 1;
+    }
+    .star {
+      height: 50px;
+      position: relative;
+      left: -70px;
+      bottom: 90px;
+    }
+    .agreement {
+      display: flex;
+      align-items: flex-start;
+      font-family: 'Georgia', serif;
+      font-size: 13px;
+      color: #333;
+      margin-top: -5px;
+      margin-bottom: 15px;
+    }
+    
+    .agreement input[type="checkbox"] {
+      margin-right: 8px;
+      margin-top: 3px;
+      transform: scale(1.2);
+      accent-color: #002154;
+      cursor: pointer;
+    }
+    
+    .agreement .check-text {
+      line-height: 1.4;
+      user-select: none;
+    }
+    
