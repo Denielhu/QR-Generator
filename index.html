@@ -35,14 +35,23 @@
           <form id="regForm">
             <input type="text" name="name" placeholder="Full Name" required style="text-transform: uppercase;" />
             <input type="text" name="studentId" placeholder="Student ID" required style="text-transform: uppercase;" />
-            <input type="text" name="section" placeholder="Section" required style="text-transform: uppercase;" />
-            <select name="role">
+            
+            <select name="role" id="role" required>
               <option value="" disabled selected>Role (optional)</option>
               <option value="Grade 11 Student">Grade 11 Student</option>
               <option value="Tertiary Student">Tertiary Student</option>
               <option value="Guest">Guest</option>
               <option value="Bidder">Bidder</option>
             </select>
+
+            <!-- Dropdown for Grade 11 sections -->
+            <select id="sectionSelect" required>
+              <option value="" disabled selected>Select Section</option>
+            </select>
+
+            <!-- Text input for other roles -->
+            <input type="text" id="sectionInput" placeholder="Enter Section" style="display: none;" required style="text-transform: uppercase;" />
+
             <input type="text" name="companion" placeholder="Companion (Optional)" style="text-transform: uppercase;" />
           
             <div class="agreement">
@@ -76,18 +85,64 @@
       const qrBox = document.getElementById("qrcode");
 
       const nameInput = form.querySelector('input[name="name"]');
+      const roleSelect = document.getElementById("role");
+      const sectionSelect = document.getElementById("sectionSelect");
+      const sectionInput = document.getElementById("sectionInput");
+
+      const grade11Sections = [
+        "ICTE101P",
+        "ICTE102P",
+        "ABM101P",
+        "CART101P",
+        "TOPER101P"
+      ];
+
+      // Force uppercase for name
       nameInput.addEventListener("input", () => {
         nameInput.value = nameInput.value.toUpperCase();
       });
 
+      roleSelect.addEventListener("change", () => {
+        const selectedRole = roleSelect.value;
+
+        // Reset both fields
+        sectionSelect.innerHTML = '<option value="" disabled selected>Select Section</option>';
+        sectionInput.value = "";
+
+        if (selectedRole === "Grade 11 Student") {
+          sectionSelect.style.display = "block";
+          sectionSelect.disabled = false;
+          sectionInput.style.display = "none";
+          sectionInput.disabled = true;
+
+          grade11Sections.forEach(section => {
+            const option = document.createElement("option");
+            option.value = section;
+            option.textContent = section;
+            sectionSelect.appendChild(option);
+          });
+
+        } else {
+          sectionSelect.style.display = "none";
+          sectionSelect.disabled = true;
+          sectionInput.style.display = "block";
+          sectionInput.disabled = false;
+        }
+      });
+
+      // Handle form submission
       form.addEventListener("submit", function (e) {
         e.preventDefault();
 
         const name = form.name.value.trim();
         const studentId = form.studentId.value.trim();
-        const section = form.section.value.trim();
-        const role = form.role.value.trim() || "N/A";  // role optional now
+        const role = form.role.value.trim() || "N/A";
         const companion = form.companion.value.trim() || "N/A";
+
+        const section =
+          sectionSelect.style.display !== "none"
+            ? sectionSelect.value.trim()
+            : sectionInput.value.trim();
 
         const qrData = `Name: ${name}\nStudent ID: ${studentId}\nSection: ${section}\nRole: ${role}\nCompanion: ${companion}`;
 
@@ -99,35 +154,43 @@
           <strong>Companion:</strong> ${companion}
         `;
 
-        qrBox.innerHTML = ""; // Clear previous QR
-
+        qrBox.innerHTML = "";
         new QRCode(qrBox, {
           text: qrData,
           width: 200,
           height: 200,
         });
 
-        // Show QR code section immediately
         document.getElementById("form-content").style.display = "none";
         document.getElementById("qrcode-section").style.display = "block";
       });
 
+      // Reset form
       window.resetForm = function () {
         form.reset();
+        sectionSelect.innerHTML = '<option value="" disabled selected>Select Section</option>';
+        sectionSelect.style.display = "block";
+        sectionInput.style.display = "none";
+        sectionInput.disabled = true;
         document.getElementById("form-content").style.display = "block";
         document.getElementById("qrcode-section").style.display = "none";
         qrBox.innerHTML = "";
       };
 
+      // Download QR
       window.downloadQR = function () {
         const canvas = document.querySelector("#qrcode canvas");
         if (!canvas) return alert("QR not found!");
 
         const name = form.name.value.trim();
         const studentId = form.studentId.value.trim();
-        const section = form.section.value.trim();
         const role = form.role.value.trim() || "N/A";
         const companion = form.companion.value.trim() || "N/A";
+
+        const section =
+          sectionSelect.style.display !== "none"
+            ? sectionSelect.value.trim()
+            : sectionInput.value.trim();
 
         const caption = `Name: ${name}\nStudent ID: ${studentId}\nSection: ${section}\nRole: ${role}\nCompanion: ${companion}`;
 
@@ -141,7 +204,6 @@
         outputCanvas.height = qrSize + captionLines.length * lineHeight + padding * 3;
 
         const ctx = outputCanvas.getContext("2d");
-
         ctx.fillStyle = "#fff";
         ctx.fillRect(0, 0, outputCanvas.width, outputCanvas.height);
 
@@ -155,8 +217,8 @@
 
         const finalImage = outputCanvas.toDataURL("image/png");
         const link = document.createElement("a");
-        link.href = finalImage;
         const safeName = name.replace(/[^a-z0-9]/gi, "_").toLowerCase();
+        link.href = finalImage;
         link.download = `qr_${safeName}.png`;
         link.click();
       };
